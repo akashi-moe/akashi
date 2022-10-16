@@ -1,0 +1,2 @@
+#+title: Akashi Guix Channel
+#+author: Akashi Contributors
