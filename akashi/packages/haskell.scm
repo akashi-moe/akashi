@@ -252,13 +252,16 @@ information (e.g. compiler version).")
                         (replace 'build
                           (lambda _
                             (invoke (which "hadrian") "-j" "--docs=none"
-                                    "--flavour=Quick" "binary-dist")))
+                                    "--flavour=Quick")))
                         (replace 'install
                           (lambda _
                             (invoke (which "hadrian")
                                     (string-append "--prefix="
-                                                   #$output) "-j"
-                                    "--docs=none" "install"))))))
+                                                   #$output)
+                                    "-j"
+                                    "--docs=none"
+                                    "--flavour=Quick"
+                                    "install"))))))
     (home-page "https://www.haskell.org/ghc")
     (build-system gnu-build-system)
     (synopsis "The Glasgow Haskell Compiler")
