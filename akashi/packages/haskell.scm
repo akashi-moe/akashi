@@ -237,9 +237,6 @@ information (e.g. compiler version).")
                                           "libraries/unix/cbits/execvpe.c")
                               (("/bin/sh")
                                (search-input-file inputs "/bin/sh")))))
-                        (add-before 'configure 'boot-hadrian
-                          (lambda _
-                            (invoke "./boot" "--hadrian")))
                         (add-before 'build 'fix-environment
                           (lambda _
                             (unsetenv "GHC_PACKAGE_PATH")
