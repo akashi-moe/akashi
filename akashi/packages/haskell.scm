@@ -179,12 +179,12 @@ information (e.g. compiler version).")
     (native-inputs (list autoconf
                          automake
                          bash-minimal
+                         gcc-toolchain
                          ghc-8.10
                          ghc-alex
                          ghc-happy
                          ghc-hadrian-9.2.4
                          python-3))
-    (propagated-inputs (list gcc-toolchain))
     (native-search-paths
      (list (search-path-specification
             (variable "GHC_PACKAGE_PATH")
@@ -244,7 +244,7 @@ information (e.g. compiler version).")
                                     (which "bash"))))
                         (replace 'build
                           (lambda _
-                            (invoke (which "hadrian") "-j" "--docs=none"
+                            (invoke (which "hadrian") "-j" "--docs=no-sphinx"
                                     "--flavour=perf" "binary-dist-dir")))
                         (replace 'install
                           (lambda _
@@ -252,7 +252,7 @@ information (e.g. compiler version).")
                                     (string-append "--prefix="
                                                    #$output)
                                     "-j"
-                                    "--docs=none"
+                                    "--docs=no-sphinx"
                                     "--flavour=perf"
                                     "install"))))))
     (home-page "https://www.haskell.org/ghc/")
