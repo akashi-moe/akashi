@@ -195,7 +195,7 @@ information (e.g. compiler version).")
             (file-type 'directory))))
     (arguments
      (list ;; GHC uses relative paths for linking shared libraries;
-           ;; as such, binaries such as ghc-iserve-dyn that exist
+           ;; as such, binaries such as ghc-iserv-dyn that exist
            ;; on different locations can cause false positives.
            #:validate-runpath? #f
            #:tests? #f
