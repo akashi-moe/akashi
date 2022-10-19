@@ -211,7 +211,7 @@ information (e.g. compiler version).")
                                      (string-append "--with-ffi-includes="
                                                     #$libffi "/include/")
                                      (string-append "--with-curses-libraries="
-                                      #$ncurses "/lib/")
+                                                    #$ncurses "/lib/")
                                      (string-append "--with-curses-includes="
                                                     #$ncurses "/include/"))
            #:phases #~(modify-phases %standard-phases
