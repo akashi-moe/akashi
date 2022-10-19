@@ -250,7 +250,7 @@ information (e.g. compiler version).")
                         (replace 'build
                           (lambda _
                             (invoke (which "hadrian") "-j" "--docs=none"
-                                    "--flavour=Quick" "binary-dist-dir")))
+                                    "--flavour=perf" "binary-dist-dir")))
                         (replace 'install
                           (lambda _
                             (invoke (which "hadrian")
@@ -258,7 +258,7 @@ information (e.g. compiler version).")
                                                    #$output)
                                     "-j"
                                     "--docs=none"
-                                    "--flavour=Quick"
+                                    "--flavour=perf"
                                     "install"))))))
     (home-page "https://www.haskell.org/ghc")
     (build-system gnu-build-system)
