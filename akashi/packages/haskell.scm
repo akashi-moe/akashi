@@ -175,18 +175,16 @@ information (e.g. compiler version).")
               (sha256
                (base32
                 "0n34k7ga6ypg8j5xawqphph8qrvsp0qmy1rxfbkw83ja0s43h88m"))))
-    (inputs (list autoconf
-                  automake
-                  bash-minimal
-                  gcc-toolchain
-                  gmp
-                  libffi
-                  ncurses
-                  python-3
-                  ghc-8.10
-                  ghc-alex
-                  ghc-happy
-                  ghc-hadrian-9.2.4))
+    (inputs (list gmp libffi ncurses))
+    (native-inputs (list autoconf
+                         automake
+                         bash-minimal
+                         ghc-8.10
+                         ghc-alex
+                         ghc-happy
+                         ghc-hadrian-9.2.4
+                         python-3))
+    (propagated-inputs (list gcc-toolchain))
     (native-search-paths
      (list (search-path-specification
             (variable "GHC_PACKAGE_PATH")
@@ -260,7 +258,7 @@ information (e.g. compiler version).")
                                     "--docs=none"
                                     "--flavour=perf"
                                     "install"))))))
-    (home-page "https://www.haskell.org/ghc")
+    (home-page "https://www.haskell.org/ghc/")
     (build-system gnu-build-system)
     (synopsis "The Glasgow Haskell Compiler")
     (description
