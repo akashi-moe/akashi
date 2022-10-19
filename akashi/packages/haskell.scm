@@ -194,53 +194,51 @@ information (e.g. compiler version).")
             (file-pattern ".*\\.conf\\.d$")
             (file-type 'directory))))
     (arguments
-     (list #:tests? #f
-           #:configure-flags #~(list (string-append "--with-gmp-libraries="
-                                                    (assoc-ref %build-inputs
-                                                               "gmp") "/lib/")
+     (list ;; GHC uses relative paths for linking shared libraries;
+           ;; as such, binaries such as ghc-iserve-dyn that exist
+           ;; on different locations can cause false positives.
+           #:validate-runpath? #f
+           #:tests? #f
+           #:configure-flags #~(list (string-append "--prefix="
+                                                    #$output)
+                                     (string-append "--with-gmp-libraries="
+                                                    #$gmp "/lib/")
                                      (string-append "--with-gmp-includes="
-                                                    (assoc-ref %build-inputs
-                                                               "gmp")
-                                                    "/include/")
+                                                    #$gmp "/include/")
                                      "--with-system-libffi"
                                      (string-append "--with-ffi-libraries="
-                                                    (assoc-ref %build-inputs
-                                                               "libffi")
-                                                    "/lib/")
+                                                    #$libffi "/lib/")
                                      (string-append "--with-ffi-includes="
-                                                    (assoc-ref %build-inputs
-                                                               "libffi")
-                                                    "/include/")
+                                                    #$libffi "/include/")
                                      (string-append "--with-curses-libraries="
-                                      (assoc-ref %build-inputs "ncurses")
-                                      "/lib/")
+                                      #$ncurses "/lib/")
                                      (string-append "--with-curses-includes="
-                                                    (assoc-ref %build-inputs
-                                                               "ncurses")
-                                                    "/include/"))
+                                                    #$ncurses "/include/"))
            #:phases #~(modify-phases %standard-phases
                         (add-before 'configure 'configure-programs
                           (lambda* (#:key inputs #:allow-other-keys)
-                            (let ((bash-minimal (assoc-ref inputs
-                                                           "bash-minimal"))
-                                  (gcc-toolchain (assoc-ref inputs
-                                                            "gcc-toolchain"))
-                                  (alex (assoc-ref inputs "ghc-alex"))
-                                  (happy (assoc-ref inputs "ghc-happy")))
-                              (setenv "SH"
-                                      (string-append bash-minimal "/bin/sh"))
-                              (setenv "CC"
-                                      (string-append gcc-toolchain "/bin/gcc"))
-                              (setenv "LD"
-                                      (string-append gcc-toolchain "/bin/ld"))
-                              (setenv "AR"
-                                      (string-append gcc-toolchain "/bin/ar"))
-                              (setenv "NM"
-                                      (string-append gcc-toolchain "/bin/nm"))
-                              (setenv "ALEX"
-                                      (string-append alex "/bin/alex"))
-                              (setenv "HAPPY"
-                                      (string-append happy "/bin/happy")))))
+                            (setenv "SH"
+                                    (search-input-file inputs "/bin/sh"))
+                            (setenv "CC"
+                                    (search-input-file inputs "/bin/gcc"))
+                            (setenv "LD"
+                                    (search-input-file inputs "/bin/ld"))
+                            (setenv "AR"
+                                    (search-input-file inputs "/bin/ar"))
+                            (setenv "NM"
+                                    (search-input-file inputs "/bin/nm"))
+                            (setenv "ALEX"
+                                    (search-input-file inputs "/bin/alex"))
+                            (setenv "HAPPY"
+                                    (search-input-file inputs "/bin/happy"))))
+                        (add-before 'configure 'fix-bin-sh
+                          (lambda* (#:key inputs #:allow-other-keys)
+                            (substitute* (list
+                                          "libraries/process/System/Process/Posix.hs"
+                                          "libraries/Cabal/Cabal/src/Distribution/Simple/Program/Script.hs"
+                                          "libraries/unix/cbits/execvpe.c")
+                              (("/bin/sh")
+                               (search-input-file inputs "/bin/sh")))))
                         (add-before 'configure 'boot-hadrian
                           (lambda _
                             (invoke "./boot" "--hadrian")))
@@ -252,7 +250,7 @@ information (e.g. compiler version).")
                         (replace 'build
                           (lambda _
                             (invoke (which "hadrian") "-j" "--docs=none"
-                                    "--flavour=Quick")))
+                                    "--flavour=Quick" "binary-dist-dir")))
                         (replace 'install
                           (lambda _
                             (invoke (which "hadrian")
